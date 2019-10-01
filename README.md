@@ -3,6 +3,11 @@ CLI scripts to guard against KDE Plasma configuration file corruption on resolut
 
 To start the script, simply run it by opening a terminal and typing **./kde-containment-guard.sh**
 
+The script works by guarding against unwanted changes, therefor, it should be run before you start your fullscreen application, or just after booting up your computer.
+
+1. Run the script once to create the backup, then you will be ready to reboot.
+2. You may run the script once for each resolution / monitor setup
+
 The script should not be run as root.
 
 You can find the backup files in **$HOME/kde-containment-guard/**
