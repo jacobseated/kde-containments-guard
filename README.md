@@ -10,6 +10,8 @@ The script works by guarding against unwanted changes, therefor, it should be ru
 
 The script should not be run as root.
 
+To re-create the backups, simply delete the backup files.
+
 You can find the backup files in **$HOME/kde-containment-guard/**
 
 Everything can be easily changed in the relevant variables in the .sh script.
