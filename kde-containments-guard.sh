@@ -11,6 +11,12 @@
 #     variables
 #     :-)
 
+# The directory the script
+# | sed 's/ /\\ /g'
+
+# The script dir is used when calling the PHP script
+script_dir=$(dirname "$(readlink -f "$0")")
+
 # The root directory of the resolution-fixer data. I.e. /home/YourUser/kde-containments-guard
 containments_guard_directory="$HOME/kde-containments-guard"
 
@@ -33,7 +39,7 @@ backup_file_path="$containments_guard_directory/$backup_file_name"
 stored_resolution_file_path="$containments_guard_directory/stored_resolution.txt"
 
 config_full_timestamp=$(date +%m-%d-%Y)
-config_full_backup="$containments_guard_directory/stored_resolution_$config_full_timestamp.txt"
+config_full_backup_path="$containments_guard_directory/$config_file_name"'_'"$config_full_timestamp.bak"
 
 # Do not change these variables
 resolution_has_changed=false
@@ -72,11 +78,11 @@ restore_from_backup () {
     
     # Just to be save, store a backup of the full file
     # Note. Quoted are needed to avoid just writing everything to one line. Sigh. The logic of bash scripting!
-    echo $config_file_content_full > "$config_full_backup"
+    echo "$config_file_content_full" > "$config_full_backup_path"
     
     # Since a simple literal string replacement is really hard in bash,
     # I decided to use PHP instead. Feel free to do this in pure bash if you know how!
-    echo "$(php ./str_replace.php $config_file_path $backup_file_path)" > "$config_file_path"
+    echo "$(php "$script_dir"/str_replace.php "$config_file_path" "$backup_file_path")" > "$config_file_path"
     
     # Kill and restart Plasma after updating the config file
     killall plasmashell
@@ -132,7 +138,7 @@ get_real_resolution () {
 check_resolution () {
     # Function to check if the resolution was changed by something.
     # If it was changed, we should wait for it to change back before restoring from backup.
-    write_log "Checking resolution."
+    # write_log "Checking resolution."
     if [ "$real_resolution" != "$stored_resolution" ]
     then
         resolution_has_changed=true
